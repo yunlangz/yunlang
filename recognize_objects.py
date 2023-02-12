@@ -1,5 +1,5 @@
 import numpy as np
-from tflite_runtime.interpreter import Interpreter
+import tflite_runtime.interpreter as tflite
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 import cv2
@@ -12,7 +12,7 @@ class ObjectRecognition:
     CAMERA_HEIGHT = 480
 
     def __init__(self, model="/tmp/detect.tflite"):
-        self.interpreter = Interpreter("model/detect.tflite")
+        self.interpreter = tflite.Interpreter("model/detect.tflite")
         self.interpreter.allocate_tensors()
         self.labels = ObjectRecognition.load_labels("model/labelmap.txt")
         self.camera = PiCamera(resolution=(ObjectRecognition.CAMERA_WIDTH, ObjectRecognition.CAMERA_HEIGHT), framerate=32)
