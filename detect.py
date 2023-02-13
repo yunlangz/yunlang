@@ -15,6 +15,7 @@
 import argparse
 import sys
 import time
+import picar_4wd as fc
 
 import cv2
 from tflite_support.task import core
@@ -81,6 +82,19 @@ def run(model: str, camera_id: int, width: int, height: int, num_threads: int,
 
     # Run object detection estimation using the model.
     detection_result = detector.detect(input_tensor)
+    objects = []
+    for detection in detection_result.detections:
+        category = detection.categories[0]
+        category_name = category.category_name
+        objects.append(category_name)
+
+    # Stop at Stop Sign
+    if "stop sign" in objects:
+        #print('stop sign')
+        fc.stop()
+    else:
+        #print('no stop')
+        fc.forward(5)
 
     # Draw keypoints and edges on input image
     image = utils.visualize(image, detection_result)
